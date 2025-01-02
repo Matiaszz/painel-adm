@@ -19,6 +19,11 @@
   height: 100%;
 }
 
+/* DESCOMENTAR ISSO EM PROD */
+/* .container.hidden {
+  display: none;
+} */
+
 .tab-content {
   display: none;
 }
