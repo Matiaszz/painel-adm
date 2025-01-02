@@ -1,6 +1,25 @@
 import { useState, useEffect } from "react";
 import Icon from "./assets/file-icon.svg";
-import './App.css'
+import "./App.css";
+
+const postCommand = (command: string) => {
+  fetch(`https://${GetParentResourceName()}/${command}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Erro na requisição");
+      }
+      console.log(`${command} enviado com sucesso`);
+    })
+    .catch((error) => {
+      console.error(`Erro ao enviar comando ${command}:`, error);
+    });
+};
 
 function App() {
   const [isMenuVisible, setMenuVisible] = useState(false);
@@ -46,6 +65,22 @@ function App() {
         </div>
         <div className={activeTab === "tab2" ? "tab-content active" : "tab-content"}>
           Comandos
+          <div>
+            <button className="button1" onClick={() => postCommand("tptome")}>Teleport to Me</button>
+            <button className="button1" onClick={() => postCommand("tpto")}>Teleport To</button>
+            <button className="button1" onClick={() => postCommand("godarea")}>God Mode (Area)</button>
+            <button className="button1" onClick={() => postCommand("godall")}>God Mode (All)</button>
+            <button className="button1" onClick={() => postCommand("kick")}>Kick Player</button>
+            <button className="button1" onClick={() => postCommand("ban")}>Ban Player</button>
+            <button className="button1" onClick={() => postCommand("unban")}>Unban Player</button>
+            <button className="button1" onClick={() => postCommand("mute")}>Mute Player</button>
+            <button className="button1" onClick={() => postCommand("mutevoice")}>Mute Voice</button>
+            <button className="button1" onClick={() => postCommand("desmute")}>Unmute</button>
+            <button className="button1" onClick={() => postCommand("addmoney")}>Add Money</button>
+            <button className="button1" onClick={() => postCommand("remmoney")}>Remove Money</button>
+            <button className="button1" onClick={() => postCommand("addcar")}>Add Car</button>
+            <button className="button1" onClick={() => postCommand("remcar")}>Remove Car</button>
+          </div>
         </div>
         <div className={activeTab === "tab3" ? "tab-content active" : "tab-content"}>
           Setagem
