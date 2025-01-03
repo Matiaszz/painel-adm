@@ -50,15 +50,10 @@ button {
 }
 
 button:hover {
-  background: linear-gradient(180deg, #E9A154 0%, #DA862C 50%, #E9A154 100%);
+  cursor: pointer;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-  /* TODO: Adicionar isso quando o tab for pressionado  */
-  background: linear-gradient(180deg, #E9A154 0%, #DA862C 50%, #E9A154 100%);
-}
+
 
 
 
