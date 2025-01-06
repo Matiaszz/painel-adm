@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Icon from "./assets/file-icon.svg";
 import card from "./assets/person-vcard.svg";
 import reload from "./assets/reload.svg";
@@ -38,6 +38,9 @@ function App(): JSX.Element {
   const [activeTab, setActiveTab] = useState<string>("tab1");
   const [activeButton, setActiveButton] = useState<string>("tab1");
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [playerCount, setPlayerCount] = useState<number>(0);
+  const [playerInfo, setPlayerInfo] = useState<{ name: string; id: number }>({ name: '', id: 0 });
+  const [bannedCount, setBannedCount] = useState<number>(0);
 
   const handleButtonClick = (tab: string, buttonId: string): void => {
     setActiveTab(tab);
@@ -50,6 +53,14 @@ function App(): JSX.Element {
   const handlePreviousPage = (): void =>
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
 
+
+  const closeMenu = () => {
+    console.log("Menu fechado!");
+    setMenuVisible(false);
+    postCommand("closeMenu");
+  };
+
+
   const paginatedData = sampleData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -59,6 +70,7 @@ function App(): JSX.Element {
     const handleMessage = (event: MessageEvent): void => {
       if (event.data && event.data.action === "toggleMenu") {
         setMenuVisible((prev) => !prev);
+        closeMenu()
       }
     };
     window.addEventListener("message", handleMessage);
@@ -74,6 +86,39 @@ function App(): JSX.Element {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isMenuVisible]);
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.action === "toggleMenu") {
+        const menu = document.getElementById("admin-painel");
+        if (menu) {
+          if (menu.classList.contains("hidden")) {
+            menu.classList.remove("hidden");
+          } else {
+            menu.classList.add("hidden");
+          }
+        }
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handlePlayerCountUpdate = (event: MessageEvent) => {
+      if (event.data && event.data.action === "updatePlayerCount") {
+        setPlayerCount(event.data.playerCount);
+      }
+    };
+
+    window.addEventListener("message", handlePlayerCountUpdate);
+    return () => {
+      window.removeEventListener("message", handlePlayerCountUpdate);
+    };
+  }, []);
 
   return (
     <div className={`container ${isMenuVisible ? "" : "hidden"}`} id="admin-painel">
